@@ -2,8 +2,7 @@ import {
   Component,
   AfterViewInit,
   ViewChildren,
-  QueryList,
-  ElementRef,
+  QueryList,  
   ComponentFactoryResolver,
   ComponentFactory,
   OnInit, EventEmitter
@@ -14,16 +13,12 @@ import { SectionComponent } from './section.component';
 @Component({
   selector: 'app-view',
   template: `
-    <div class="container">
+    <div class="container" *ngFor="let number of [0,1,2,3,4]">
       <app-toolbar
-        (addComponentClick)="onAddComponentClick('0')"
+        (addComponentClick)="onAddComponentClick(number)"
       ></app-toolbar>
-      <div app-type="section" id="SECTION1" [active]="true"></div>
-      <br />
-      <app-toolbar
-        (addComponentClick)="onAddComponentClick('1')"
-      ></app-toolbar>
-      <div app-type="section" id="SECTION2"></div>
+      <div app-type="section" id="SECTION{{number}}" [active]="true"></div>
+      <br />      
     </div>
   `
 })
@@ -31,26 +26,25 @@ export class ViewComponent implements AfterViewInit, OnInit {
   @ViewChildren(SectionComponent) sections: QueryList<SectionComponent>;
   allSections: SectionComponent[];
   textComponentFactory: ComponentFactory<TextComponent>;
-  hideMe: EventEmitter<number> = new EventEmitter<number>();
+  
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
-
-  ngOnInit() {
-
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) {
+    
     this.textComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
       TextComponent
     );
   }
 
+  ngOnInit() {
+
+  }
+
   ngAfterViewInit() {
-    // debugger;
-    // this.allSections = this.sections.reduce((result, section, index) => {
-    //   debugger;
-    //   // if (section.active) {
-    //     result.push(section);
-    //   // }
-    //   return result;
-    // }, []);
+    this.allSections = this.sections.reduce((result, section, index) => {
+      debugger;
+        result.push(section);
+      return result;
+    }, []);
   }
   ngAddClick() {    
     this.allSections = this.sections.reduce((result, section, index) => {      
@@ -59,19 +53,10 @@ export class ViewComponent implements AfterViewInit, OnInit {
     }, []);
   }
   onAddComponentClick(element: any) {
-    // debugger;
-    this.ngAddClick();
     this.allSections[element].viewContainerRef.clear();
-  
-    // this.allSections[element].id='section4'
-    // this.allSections[element].viewContainerRef.createComponent(this.textComponentFactory);
-
     let instance  = this.allSections[element].viewContainerRef.createComponent(this.textComponentFactory, 0).instance;
 
-    instance.message = "message -: " + element;
-    instance.hideMeClick = this.hideMe;
-    // this.allSections.forEach(section => {
-    //   section.viewContainerRef.createComponent(this.textComponentFactory);
-    // });
+    instance.counter = element;
+        
   }
 }
