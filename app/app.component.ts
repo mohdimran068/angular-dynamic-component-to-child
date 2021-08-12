@@ -19,14 +19,15 @@ export class AppComponent  {
   constructor(private resolver: ComponentFactoryResolver) { }
   increment(){
     debugger;
+    this.target.clear();
     if(this.counter < this.questions.length)this.counter++;
     else this.counter=0
     this.currentQuestion = this.questions[this.counter];
 
     let childComponent = this.resolver.resolveComponentFactory(ViewComponent);
      
-    this.componentRef = this.target.createComponent(childComponent); // <-- here it's throws an error!
-    
+    let instance = this.target.createComponent(childComponent,0).instance; // <-- here it's throws an error!
+    instance.counter=this.counter;
     // this.componentRef.question= this.currentQuestion;
   }
 }
