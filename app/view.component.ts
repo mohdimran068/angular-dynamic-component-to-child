@@ -47,18 +47,17 @@ export class ViewComponent implements OnChanges, AfterViewInit, OnInit {
 
   ngOnInit() {}
   ngOnChanges() {
-    debugger;
-    this.allSections = [];
-    this.sections = new QueryList<SectionComponent>();
-    let items = this.subQuestions(this.counter);
-
-    items.forEach(x => this.ngAddClick());
+    // debugger;
+    // this.allSections = [];
+    // this.sections = new QueryList<SectionComponent>();
+    // let items = this.subQuestions(this.counter);
+    // items.forEach(x => this.ngAddClick());
   }
   ngAfterViewInit() {
-    // this.allSections = this.sections.reduce((result, section, index) => {
-    //     result.push(section);
-    //   return result;
-    // }, []);
+    this.allSections = this.sections.reduce((result, section, index) => {
+      result.push(section);
+      return result;
+    }, []);
   }
   ngAddClick() {
     this.allSections = this.sections.reduce((result, section, index) => {
