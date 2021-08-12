@@ -9,8 +9,8 @@ import { ViewComponent } from './view.component';
 import { AppComponent } from './app.component';
 @NgModule({
   imports: [BrowserModule, FormsModule],
-  declarations: [AppComponent, SectionComponent, TextComponent, ToolbarComponent, ViewComponent],
+  declarations: [AppComponent, SectionComponent, TextComponent, ToolbarComponent, ViewComponent],  
   bootstrap: [AppComponent],
-  entryComponents: [TextComponent]
+  entryComponents: [TextComponent,ViewComponent]
 })
 export class AppModule { }
