@@ -2,61 +2,79 @@ import {
   Component,
   AfterViewInit,
   ViewChildren,
-  QueryList,  
+  QueryList,
   ComponentFactoryResolver,
   ComponentFactory,
-  OnInit, EventEmitter
+  OnInit,
+  EventEmitter,
+  Input,
+  OnChanges
 } from '@angular/core';
 import { TextComponent } from './text.component';
 import { SectionComponent } from './section.component';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-view',
   template: `
-    <div class="container" *ngFor="let number of [0,1,2,3,4]">
-      <app-toolbar
-        (addComponentClick)="onAddComponentClick(number)"
-      ></app-toolbar>
-      <div app-type="section" id="SECTION{{number}}" [active]="true"></div>
-      <br />      
+    <div class="container">
+      <div *ngFor="let in of subQuestions(question); let i = index">
+        <app-toolbar
+          [counter]="i"
+          (addComponentClick)="onAddComponentClick(i)"
+        ></app-toolbar>
+        <div app-type="section" id="SECTION{{ i }}"></div>
+      </div>
+      <br />
     </div>
   `
 })
-export class ViewComponent implements AfterViewInit, OnInit {
+export class ViewComponent implements OnChanges, AfterViewInit, OnInit {
+  @Input() counter: number;
+  @Input() question: any = {};
   @ViewChildren(SectionComponent) sections: QueryList<SectionComponent>;
   allSections: SectionComponent[];
   textComponentFactory: ComponentFactory<TextComponent>;
-  
 
+  subQuestions(i: number) {
+    return new Array(i);
+  }
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {
-    
     this.textComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
       TextComponent
     );
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+  ngOnChanges() {
+    debugger;
+    this.allSections = [];
+    this.sections = new QueryList<SectionComponent>();
+    let items = this.subQuestions(this.counter);
 
+    items.forEach(x => this.ngAddClick());
   }
-
   ngAfterViewInit() {
-    this.allSections = this.sections.reduce((result, section, index) => {
-      debugger;
-        result.push(section);
-      return result;
-    }, []);
+    // this.allSections = this.sections.reduce((result, section, index) => {
+    //     result.push(section);
+    //   return result;
+    // }, []);
   }
-  ngAddClick() {    
-    this.allSections = this.sections.reduce((result, section, index) => {      
-        result.push(section);
+  ngAddClick() {
+    this.allSections = this.sections.reduce((result, section, index) => {
+      result.push(section);
       return result;
     }, []);
   }
   onAddComponentClick(element: any) {
-    this.allSections[element].viewContainerRef.clear();
-    let instance  = this.allSections[element].viewContainerRef.createComponent(this.textComponentFactory, 0).instance;
+    // debugger;
+    // this.ngAddClick();
+    this.allSections[0].viewContainerRef.clear();
+    let instance = this.allSections[0].viewContainerRef.createComponent(
+      this.textComponentFactory,
+      0
+    ).instance;
 
     instance.counter = element;
-        
   }
 }

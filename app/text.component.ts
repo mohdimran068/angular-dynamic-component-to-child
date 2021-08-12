@@ -6,7 +6,7 @@ import { Component,Input, Output, EventEmitter } from '@angular/core';
 })
 export class TextComponent {
    @Input() counter:any
-   @Output() hideMeClick = new EventEmitter();
+   // @Output() hideMeClick = new EventEmitter();
    isActive:boolean=true;
    constructor() { }
    hideMe(){
